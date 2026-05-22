@@ -771,7 +771,6 @@ main > section,
   color: var(--color-text);
   text-align: justify;
   width: 100%;
-  max-width: 298px;
 }
 
 /* ====================================================
@@ -950,8 +949,7 @@ main > section,
 .exp-feature__image {
   position: relative;
   width: 100%;
-  max-width: 310px;
-  height: 197px;
+  aspect-ratio: 740 / 416;
   overflow: hidden;
   border-radius: 4px;
 }
