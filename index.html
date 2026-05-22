@@ -1,0 +1,360 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no" />
+
+    <!-- ===== Primary Meta Tags ===== -->
+    <title>CasLive（キャスライブ）| 複合型次世代ライブ配信アプリ</title>
+    <meta
+      name="description"
+      content="CasLive（キャスライブ）は、厳選された至高のライバーたちと世界中のファンを直接繋ぐ複合型次世代ライブ配信アプリ。日常的な配信から限定グッズのライブ販売（ライブコマース）まで楽しいコンテンツが盛り沢山。"
+    />
+    <meta name="keywords" content="CasLive,キャスライブ,ライブ配信,ライブコマース,複合型次世代ライブ配信,推し活,ライバー,投げ銭,ギフト,EC,オークション" />
+    <meta name="author" content="CasLive Inc." />
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="theme-color" content="#161a3e" />
+    <link rel="canonical" href="https://project-zero.caslive.app/" />
+
+    <!-- ===== Open Graph / Facebook ===== -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://project-zero.caslive.app/" />
+    <meta property="og:title" content="CasLive（キャスライブ）| 複合型次世代ライブ配信アプリ" />
+    <meta
+      property="og:description"
+      content="厳選された至高のライバーたちと世界中のファンを直接繋ぐ複合型次世代ライブ配信アプリ。ライブ販売（ライブコマース）も体験できます。"
+    />
+    <meta property="og:image" content="https://project-zero.caslive.app/assets/images/ogp.png" />
+    <meta property="og:site_name" content="CasLive" />
+    <meta property="og:locale" content="ja_JP" />
+
+    <!-- ===== Twitter Card ===== -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="CasLive（キャスライブ）| 複合型次世代ライブ配信アプリ" />
+    <meta name="twitter:description" content="厳選された至高のライバーたちと世界中のファンを直接繋ぐ複合型次世代ライブ配信アプリ。" />
+    <meta name="twitter:image" content="https://project-zero.caslive.app/assets/images/ogp.png" />
+
+    <!-- ===== Favicon ===== -->
+    <link rel="icon" type="image/svg+xml" href="assets/images/favicon.ico" />
+    <link rel="apple-touch-icon" href="assets/images/apple-touch-icon.png" />
+
+    <!-- ===== Fonts ===== -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet" />
+
+    <!-- ===== Stylesheet ===== -->
+    <link rel="stylesheet" href="style.css" />
+
+    <!-- ===== Structured Data (JSON-LD) ===== -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "MobileApplication",
+        "name": "CasLive",
+        "alternateName": "キャスライブ",
+        "applicationCategory": "SocialNetworkingApplication",
+        "operatingSystem": "iOS, Android",
+        "description": "厳選された至高のライバーたちと世界中のファンを直接繋ぐ複合型次世代ライブ配信アプリ。",
+        "url": "https://project-zero.caslive.app/",
+        "inLanguage": "ja",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "JPY"
+        }
+      }
+    </script>
+
+    <!-- ===== Google Analytics 4 (GA4) ===== -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-BZRPY25F8Q"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "G-BZRPY25F8Q", {
+        page_location: location.href,
+        page_title: document.title,
+      });
+
+      // Download button event tracking (stylish版と統一されたスキーマ)
+      // data-track="download_click" のリンククリックを計測
+      // data-store: appstore / googleplay
+      // data-location: cta_top / cta_bottom
+      document.addEventListener("click", function (e) {
+        var link = e.target.closest('[data-track="download_click"]');
+        if (!link) return;
+        var store = link.dataset.store || "unknown";
+        var location = link.dataset.location || "unknown";
+        gtag("event", "download_click", {
+          event_category: "app_download",
+          event_label: store + "_" + location,
+          store: store,
+          location: location,
+          page_variant: "project_zero",
+        });
+      });
+    </script>
+  </head>
+  <body>
+    <!-- ===== PC Showcase Decorations (1100px+ で表示) ===== -->
+    <aside class="pc-decor pc-decor--left" aria-hidden="true">
+      <p class="pc-decor__tagline neon-shadow">複合型次世代ライブ配信アプリ</p>
+      <img src="assets/images/logo.svg" alt="" class="pc-decor__logo" loading="lazy" decoding="async" />
+    </aside>
+    <aside class="pc-decor pc-decor--right" aria-hidden="true">
+      <img src="assets/images/pc-qr.svg" alt="" class="pc-decor__qr" loading="lazy" decoding="async" />
+    </aside>
+
+    <!-- ===== Header ===== -->
+    <header class="header">
+      <div class="header__inner">
+        <span class="header__tagline">複合型次世代ライブ配信アプリ</span>
+        <span class="header__brand">CasLive（キャスライブ）</span>
+      </div>
+    </header>
+
+    <main>
+      <!-- ===== Main Visual ===== -->
+      <section class="mv" id="top">
+        <!-- 写真コラージュ全面背景 -->
+        <div class="mv__bg" aria-hidden="true">
+          <img src="assets/images/mv-bg.png" alt="" class="mv__bg-img" loading="eager" decoding="async" fetchpriority="high" />
+          <div class="mv__bg-dots"></div>
+        </div>
+
+        <!-- タイトル: 写真上に固定配置（写真の上1/4付近） -->
+        <div class="mv__title">
+          <p class="mv__tagline neon-shadow">複合型次世代ライブ配信アプリ</p>
+          <img src="assets/images/logo.svg" alt="CasLive" class="mv__logo" loading="eager" decoding="async" fetchpriority="high" />
+        </div>
+
+        <!-- band + DLボタン: 写真下部に重ねる -->
+        <div class="mv__cta">
+          <div class="band">
+            <img src="assets/images/band-pink.png" alt="" class="band__img" loading="eager" decoding="async" />
+            <div class="band__text">
+              <p>さぁ、今すぐ</p>
+              <p>CasLiveで&ldquo;推し&rdquo;に</p>
+              <p>会いに行こう。</p>
+            </div>
+          </div>
+
+          <div class="dl-row">
+            <a
+              href="https://apps.apple.com/app/id6758350487"
+              class="dl-row__btn"
+              target="_blank"
+              rel="noopener"
+              data-track="download_click"
+              data-store="appstore"
+              data-location="cta_top"
+            >
+              <img src="assets/images/badge-appstore.png" alt="App Storeからダウンロード" loading="lazy" decoding="async" />
+            </a>
+            <a
+              href="https://play.google.com/store/apps/details?id=com.growth_holdings.cas_live"
+              class="dl-row__btn"
+              target="_blank"
+              rel="noopener"
+              data-track="download_click"
+              data-store="googleplay"
+              data-location="cta_top"
+            >
+              <img src="assets/images/badge-google.png" alt="Google Playで手に入れよう" loading="lazy" decoding="async" />
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== Introduction ===== -->
+      <section class="introduction" id="introduction">
+        <div class="section-inner">
+          <div class="section-heading">
+            <h2 class="section-heading__en neon-shadow" data-text="INTRODUCTION">INTRODUCTION</h2>
+            <p class="section-heading__ja">CasLiveとは</p>
+          </div>
+
+          <div class="introduction__text">
+            <p>CasLiveは、厳選された至高のライバーたちと世界中のファンを直接繋ぐ複合型次世代ライブ配信アプリです。</p>
+            <p>日常的な配信から視聴者参加型のイベント、さらにはここでしか手に入らない限定グッズのライブ販売（ライブコマース）まで楽しいコンテンツが盛り沢山！</p>
+          </div>
+
+          <div class="neon-card">
+            <div class="introduction__media">
+              <img src="assets/images/intro-character.png" alt="CasLiveライバーイメージ" loading="lazy" decoding="async" />
+            </div>
+            <p class="introduction__caption">
+              CasLiveのライバーは、CasLiveがスカウトした選りすぐりのエンターテイナーばかり。きっとCasLiveのライブ配信を通してあなたの日常に彩りを添えてくれる特別な&ldquo;推し&rdquo;が見つかるはず！
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== Experience ===== -->
+      <section class="experience" id="experience">
+        <div class="section-inner">
+          <div class="section-heading">
+            <h2 class="section-heading__en neon-shadow" data-text="EXPERIENCE">EXPERIENCE</h2>
+            <div class="section-heading__ja section-heading__ja--multi">
+              <p>ライブ販売（ライブコマース）体験</p>
+              <p>ライブ配信</p>
+            </div>
+          </div>
+
+          <!-- コンテンツ1-1: ライブコマース -->
+          <div class="exp-block">
+            <div class="exp-block__image exp-block__image--right">
+              <img src="assets/images/exp-image-1.png" alt="ライブコマース体験" loading="lazy" decoding="async" />
+              <div class="exp-block__dots" aria-hidden="true"></div>
+            </div>
+            <div class="exp-block__text exp-block__text--left">
+              <h3 class="exp-block__heading neon-shadow">
+                ライブ販売<br />（ライブコマース）体験
+              </h3>
+              <div class="exp-block__body">
+                <p>&ldquo;推し&rdquo;の限定グッズは見逃せないですよね？そんなときは、CasLiveのライブ販売（ライブコマース）です！</p>
+                <p>「ほしい！」と思ったら、ライブ配信中にすぐ購入！CasLiveでは、ライブを見ながらシームレスにグッズを購入することができます。事前にお支払い先を登録しておけば、さらにスピーディーな購入が可能！</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- コンテンツ1-2: ライブ配信 -->
+          <div class="exp-block">
+            <div class="exp-block__image exp-block__image--left">
+              <img src="assets/images/exp-image-2.png" alt="ライブ配信" loading="lazy" decoding="async" />
+              <div class="exp-block__dots" aria-hidden="true"></div>
+            </div>
+            <div class="exp-block__text exp-block__text--right">
+              <h3 class="exp-block__heading neon-shadow">ライブ配信</h3>
+              <div class="exp-block__body">
+                <p>CasLiveのライブ配信は、多種多様なライバーがあなたのちょっとした時間を最高のライブ空間に変えてくれます。</p>
+                <p>もし応援したい&ldquo;推し&rdquo;が見つかったら、ぜひ豊富なスタンプやギフトを使ってたくさんあなたの思いを届けてあげてください。&ldquo;推し&rdquo;との距離を一気に縮めることができるでしょう。</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- CTAバナー -->
+          <div class="exp-cta">
+            <div class="band">
+              <img src="assets/images/band-pink-exp.png" alt="" class="band__img" loading="lazy" decoding="async" />
+              <div class="band__text">
+                <p>さぁ、今すぐ</p>
+                <p>CasLiveで&ldquo;推し&rdquo;に</p>
+                <p>会いに行こう。</p>
+              </div>
+            </div>
+            <a
+              href="https://apps.apple.com/app/id6758350487"
+              class="exp-cta__btn neon-card neon-card--button"
+              data-track="download_click"
+              data-store="appstore"
+              data-location="cta_middle"
+              target="_blank"
+              rel="noopener"
+            >
+              <span class="neon-shadow" data-text="今すぐダウンロード">今すぐダウンロード</span>
+            </a>
+          </div>
+
+          <!-- コンテンツ2-1 -->
+          <div class="exp-feature neon-card">
+            <h3 class="exp-feature__heading neon-shadow">
+              シームレスにつながる<br />新感覚の複合型<br />エンターテイメント
+            </h3>
+            <div class="exp-feature__image">
+              <img src="assets/images/exp-image-3.png" alt="シームレスなエンターテイメント体験" loading="lazy" decoding="async" />
+              <div class="exp-block__dots" aria-hidden="true"></div>
+            </div>
+            <div class="exp-feature__body">
+              <p>従来のライブ配信アプリでは、機能毎にどうしてもツールを横断しなければいけないことが多くありましたが、CasLiveは違います。</p>
+              <p>CasLiveは充実したライブ配信環境に加えて、特にライブ販売（ライブコマース）に力を入れており、ライバーの限定グッズのみならずライバーへ遠隔でプレゼントをアプリ内でタイムリーに贈ることができるのが大きな特徴です。サプライズでプレゼントを贈って&ldquo;推し&rdquo;のライバーに喜んでもらいましょう！</p>
+            </div>
+          </div>
+
+          <!-- コンテンツ2-2 -->
+          <div class="exp-feature neon-card">
+            <h3 class="exp-feature__heading neon-shadow">
+              さらに広がる<br />最高のライブ空間
+            </h3>
+            <div class="exp-feature__image">
+              <img src="assets/images/exp-image-4.png" alt="最高のライブ空間" loading="lazy" decoding="async" />
+              <div class="exp-block__dots" aria-hidden="true"></div>
+            </div>
+            <div class="exp-feature__body">
+              <p>CasLiveは、既存機能のアップデートもさることながらライバーや視聴者に限定せずすべての方にとって居心地の良い空間作りを追求していきます。</p>
+              <p>高レベル視聴者に限定されたプレミアムなオークション機能やライバー・店舗と言った垣根を越えて良質なグッズを買い求めることのできるECショップ機能など「あったらいいな」と思える機能を随時リリースしていく予定です。</p>
+              <p>ライブ販売（ライブコマース）以外にも、複数人でライブ配信のできるコラボ・バトル配信、視聴者参加型で楽しめるイベントなど続々企画中です！お楽しみに！</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== CTA ===== -->
+      <section class="cta" id="download">
+        <div class="band cta__band">
+          <img src="assets/images/band-pink-cta.png" alt="" class="band__img" loading="lazy" decoding="async" />
+          <div class="band__text">
+            <p>さぁ、今すぐ</p>
+            <p>CasLiveで&ldquo;推し&rdquo;に</p>
+            <p>会いに行こう。</p>
+          </div>
+        </div>
+
+        <div class="cta__character">
+          <img src="assets/images/cta-character.png" alt="CasLiveキャストイメージ" loading="lazy" decoding="async" />
+        </div>
+
+        <div class="cta__dl neon-card">
+          <div class="cta__dl-title">
+            <p class="cta__dl-tagline">複合型次世代ライブ配信アプリ</p>
+            <img src="assets/images/logo.svg" alt="CasLive" class="cta__dl-logo" loading="lazy" decoding="async" />
+          </div>
+
+          <div class="dl-row dl-row--small">
+            <a
+              href="https://apps.apple.com/app/id6758350487"
+              class="dl-row__btn"
+              target="_blank"
+              rel="noopener"
+              data-track="download_click"
+              data-store="appstore"
+              data-location="cta_bottom"
+            >
+              <img src="assets/images/badge-appstore.png" alt="App Storeからダウンロード" loading="lazy" decoding="async" />
+            </a>
+            <a
+              href="https://play.google.com/store/apps/details?id=com.growth_holdings.cas_live"
+              class="dl-row__btn"
+              target="_blank"
+              rel="noopener"
+              data-track="download_click"
+              data-store="googleplay"
+              data-location="cta_bottom"
+            >
+              <img src="assets/images/badge-google.png" alt="Google Playで手に入れよう" loading="lazy" decoding="async" />
+            </a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- ===== Footer ===== -->
+    <footer class="footer">
+      <nav class="footer__nav">
+        <a href="https://growth-hd.jp/" class="footer__link" target="_blank" rel="noopener">運営会社</a>
+        <a href="/sub/terms.html" class="footer__link">利用規約</a>
+        <a href="/sub/privacy-policy.html" class="footer__link">プライバシーポリシー</a>
+        <a href="/sub/legal.html" class="footer__link">特定商取引に基づく表記</a>
+        <a href="/sub/payment-act.html" class="footer__link">資金決済法に基づく表記</a>
+        <a href="/sub/faq.html" class="footer__link">FAQ</a>
+      </nav>
+      <p class="footer__copy">© CasLive Inc.</p>
+    </footer>
+
+    <script src="assets/js/script.js"></script>
+  </body>
+</html>

@@ -1,0 +1,4 @@
+User-agent: *
+Disallow: /
+
+Sitemap: https://project-zero.caslive.app/sitemap.xml

@@ -1,0 +1,1296 @@
+/* ============================================
+   CasLive LP (Project Zero) - style.css
+   - Figma SP 390px を基準にレスポンシブ実装
+   - PC では SP レイアウトを中央 (max 540px) に置き、両脇に余白
+   ============================================ */
+
+:root {
+  --color-bg: #161a3e;
+  --color-bg-deep: #0e1230;
+  --color-pink: #f723d0;
+  --color-cyan: #32c8ff;
+  --color-text: #ffffff;
+  --color-text-muted: rgba(255, 255, 255, 0.85);
+
+  --font-jp: "Noto Sans JP", sans-serif;
+
+  /* SP 390px 基準。PC ではこの最大幅で中央寄せ */
+  --sp-frame: 500px;
+  --content-width: 350px;
+  --sp-gutter: 20px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  background: var(--color-bg-deep);
+}
+
+body {
+  font-family: var(--font-jp);
+  color: var(--color-text);
+  /* Figma準拠: ベース #161A3E + 線形グラデ 30% overlay
+     stops: 0% #32C8FF(シアン) / 25% #479EE1(水色) / 50% #161A3E(紺) /
+            75% #861F87(紫) / 100% #F723D0(ピンク) */
+  background:
+    linear-gradient(
+      180deg,
+      rgba(50, 200, 255, 0.3) 0%,
+      rgba(71, 158, 225, 0.3) 25%,
+      rgba(22, 26, 62, 0.3) 50%,
+      rgba(134, 31, 135, 0.3) 75%,
+      rgba(247, 35, 208, 0.3) 100%
+    ),
+    #161a3e;
+  background-attachment: fixed;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+ul {
+  list-style: none;
+}
+
+/* ====================================================
+   グローバルラッパー: SPサイズで中央寄せ
+   ==================================================== */
+main {
+  display: block;
+  background: var(--color-bg);
+  width: 100%;
+  max-width: var(--sp-frame);
+  margin: 0 auto;
+  position: relative;
+  /* Figmaの drop-shadow(blur 130 white 50%) は SP で main 上下に光彩が
+     漏れてヘッダー直下に黄色いハローが見えるため SP では適用しない。
+     PC 幅では box-shadow で控えめなネオン halo に置き換える (下の @media)。 */
+}
+
+main > section,
+.header,
+.footer {
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  position: relative;
+  overflow: hidden;
+}
+
+.header,
+.footer {
+  max-width: var(--sp-frame);
+}
+
+.section-inner {
+  width: 100%;
+  padding: 80px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px;
+}
+
+/* セクション内の幅制限ブロック（見出し・本文テキスト） */
+.section-inner > .section-heading,
+.section-inner > .introduction__text {
+  width: var(--content-width);
+  max-width: calc(100% - 2 * var(--sp-gutter));
+}
+
+/* sr-only: アクセシビリティ用、視覚的に非表示 */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ====================================================
+   ネオン共通エフェクト
+   ==================================================== */
+.neon-shadow {
+  text-shadow:
+    3px 3px 0 var(--color-pink),
+    -2px -2px 0 rgba(50, 200, 255, 0.6);
+}
+
+.neon-card {
+  position: relative;
+  background: var(--color-bg);
+  border-radius: 20px;
+  box-shadow:
+    -6px -6px 0 0 var(--color-cyan),
+    6px 6px 0 0 var(--color-pink);
+}
+
+.neon-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background-image: url("assets/images/card-texture-exp.png");
+  background-size: 15px 15px;
+  background-repeat: repeat;
+  opacity: 0.8;
+  pointer-events: none;
+}
+
+.neon-card > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* ====================================================
+   セクション見出し
+   ==================================================== */
+.section-heading {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+}
+
+.section-heading__en {
+  font-size: 42px;
+  font-weight: 900;
+  line-height: 1.2;
+  color: var(--color-text);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  /* CSS-only グリッチ用: 疑似要素を上に重ねるため relative + overflow visible 維持 */
+  position: relative;
+  display: inline-block;
+  /* ベース文字自体も微振動で形ブレ感を出す
+     （斜めズレを避けるため clip-path: polygon は使わず translate のみ） */
+  animation: glitch-base 3s infinite steps(1, end);
+}
+
+/* ==== CSS-only Glitch effect (cohamu.com 参考の置換実装) ====
+   Chromium の SVG filter primitive はアニメ反映不可のため、
+   ::before/::after で pink/cyan の複製テキストを重ねて
+   clip-path + transform を @keyframes で時間変化させる。
+   data-text 属性に同じテキストを入れること。
+*/
+.section-heading__en::before,
+.section-heading__en::after,
+.exp-cta__btn span::before,
+.exp-cta__btn span::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  pointer-events: none;
+  text-shadow: none;
+  /* 親の text-transform / letter-spacing は継承される */
+}
+
+.section-heading__en::before,
+.exp-cta__btn span::before {
+  color: var(--color-pink);
+  transform: translate(2px, 0);
+  animation: glitch-pink 3s infinite steps(1, end);
+}
+
+.section-heading__en::after,
+.exp-cta__btn span::after {
+  color: var(--color-cyan);
+  transform: translate(-2px, 0);
+  animation: glitch-cyan 3s infinite steps(1, end);
+}
+
+/* glitch-pink: 元 cohamu.com merge1 の y(0..50) / height(0..24) スケール済 21 キー。
+   clip-path: inset(top% 0 bottom% 0) で「帯の中だけ表示」、bottom = 100-y-h (clamp 0)。
+   height=0 のキーは bottom を 100% にして不可視。
+   keyTimes: 0, 0.362, 0.368, 0.421, 0.440, 0.477, 0.518, 0.564, 0.593, 0.613,
+             0.644, 0.693, 0.721, 0.736, 0.772, 0.818, 0.844, 0.894, 0.925, 0.939, 1 */
+@keyframes glitch-pink {
+  0%      { clip-path: inset(100% 0 0% 0); }   /* y=50,h=5 (bbox外) */
+  36.2%   { clip-path: inset(100% 0 100% 0); } /* h=0 不可視 */
+  36.8%   { clip-path: inset(28% 0 62% 0); }   /* y=14,h=5 */
+  42.1%   { clip-path: inset(100% 0 0% 0); }   /* y=50,h=14 (bbox外) */
+  44%     { clip-path: inset(28% 0 24% 0); }   /* y=14,h=24 太い帯 */
+  47.7%   { clip-path: inset(2% 0 100% 0); }   /* h=0 不可視 */
+  51.8%   { clip-path: inset(2% 0 88% 0); }    /* y=1,h=5 上端 */
+  56.4%   { clip-path: inset(48% 0 100% 0); }  /* h=0 不可視 */
+  59.3%   { clip-path: inset(38% 0 100% 0); }  /* h=0 不可視 */
+  61.3%   { clip-path: inset(100% 0 100% 0); } /* h=0 不可視 */
+  64.4%   { clip-path: inset(100% 0 0% 0); }   /* y=50,h=5 (bbox外) */
+  69.3%   { clip-path: inset(18% 0 34% 0); }   /* y=9,h=24 太い帯 */
+  72.1%   { clip-path: inset(56% 0 6% 0); }    /* y=28,h=19 */
+  73.6%   { clip-path: inset(38% 0 100% 0); }  /* h=0 不可視 */
+  77.2%   { clip-path: inset(100% 0 100% 0); } /* h=0 不可視 */
+  81.8%   { clip-path: inset(38% 0 100% 0); }  /* h=0 不可視 */
+  84.4%   { clip-path: inset(66% 0 0% 0); }    /* y=33,h=19 下部 */
+  89.4%   { clip-path: inset(8% 0 64% 0); }    /* y=4,h=14 */
+  92.5%   { clip-path: inset(28% 0 62% 0); }   /* y=14,h=5 */
+  93.9%   { clip-path: inset(100% 0 100% 0); } /* h=0 不可視 */
+  100%    { clip-path: inset(98% 0 0% 0); }    /* y=49,h=24 下端 */
+}
+
+/* glitch-cyan: 元 merge2 の y/height スケール済 ≈20キー。
+   m2_kt_y: 0, 0.055, 0.100, 0.125, 0.159, 0.182, 0.202, 0.236, 0.268, 0.326,
+            0.357, 0.400, 0.408, 0.461, 0.493, 0.513, 0.548, 0.577, 0.613, 1
+   y/h は 0〜50px range → 0〜100% 換算 */
+@keyframes glitch-cyan {
+  0%      { clip-path: inset(98% 0 100% 0); }  /* y=49,h=0 不可視 */
+  5.5%    { clip-path: inset(100% 0 100% 0); } /* y=50,h=0 不可視 */
+  10%     { clip-path: inset(66% 0 100% 0); }  /* y=33,h=0 不可視 */
+  12.5%   { clip-path: inset(50% 0 34% 0); }   /* y=25,h=8 */
+  15.9%   { clip-path: inset(40% 0 44% 0); }   /* y=20,h=8 */
+  18.2%   { clip-path: inset(100% 0 0% 0); }   /* y=50,h=6 (bbox外) */
+  20.2%   { clip-path: inset(74% 0 14% 0); }   /* y=37,h=6 下部 */
+  23.6%   { clip-path: inset(84% 0 100% 0); }  /* h=0 不可視 */
+  26.8%   { clip-path: inset(92% 0 100% 0); }  /* h=0 不可視 */
+  32.6%   { clip-path: inset(96% 0 0% 0); }    /* y=48,h=2 端 */
+  35.7%   { clip-path: inset(64% 0 26% 0); }   /* y=32,h=5 */
+  40%     { clip-path: inset(48% 0 32% 0); }   /* y=24,h=10 */
+  40.8%   { clip-path: inset(92% 0 0% 0); }    /* y=46,h=16 下端 太い帯 */
+  46.1%   { clip-path: inset(62% 0 28% 0); }   /* y=31,h=5 */
+  49.3%   { clip-path: inset(84% 0 100% 0); }  /* h=0 不可視 */
+  51.3%   { clip-path: inset(40% 0 100% 0); }  /* h=0 不可視 */
+  54.8%   { clip-path: inset(12% 0 78% 0); }   /* y=6,h=5 上端 */
+  57.7%   { clip-path: inset(96% 0 0% 0); }    /* y=48,h=5 下端 (h kt 範囲外、最後の h=5 を流用) */
+  61.3%   { clip-path: inset(96% 0 0% 0); }    /* y=48,h=5 */
+  100%    { clip-path: inset(100% 0 0% 0); }   /* y=50,h=5 (bbox外) */
+}
+
+/* glitch-base: 元 cohamu の merge1 同位相で発生する「形ブレ」のみを transform で再現。
+   斜め切れ込みを避けるため clip-path: polygon は不採用、translate のみ。 */
+@keyframes glitch-base {
+  0%,
+  36%,
+  100% {
+    transform: translate(0, 0);
+  }
+  36.8% {
+    transform: translate(-1px, 0);
+  }
+  42.1% {
+    transform: translate(2px, 0);
+  }
+  44% {
+    transform: translate(-2px, 0);
+  }
+  47.7% {
+    transform: translate(1px, 0);
+  }
+  51.8% {
+    transform: translate(-1px, 0);
+  }
+  56.4% {
+    transform: translate(0, 0);
+  }
+  69.3% {
+    transform: translate(-3px, 0);
+  }
+  72.1% {
+    transform: translate(2px, 0);
+  }
+  73.6% {
+    transform: translate(-1px, 0);
+  }
+  84.4% {
+    transform: translate(1px, 0);
+  }
+  89.4% {
+    transform: translate(-2px, 0);
+  }
+  92.5% {
+    transform: translate(1px, 0);
+  }
+  94% {
+    transform: translate(0, 0);
+  }
+}
+
+/* reduced-motion: アニメ停止 */
+@media (prefers-reduced-motion: reduce) {
+  .section-heading__en,
+  .exp-cta__btn span {
+    animation: none;
+    transform: none;
+    clip-path: none;
+  }
+  .section-heading__en::before,
+  .section-heading__en::after,
+  .exp-cta__btn span::before,
+  .exp-cta__btn span::after {
+    animation: none;
+    opacity: 0;
+  }
+  .cta__dl-logo,
+  .mv__logo,
+  .mv__title,
+  .mv__tagline,
+  .mv__cta .band__img {
+    animation: none;
+    transform: none;
+    opacity: 1;
+  }
+  .introduction__media,
+  .cta__character {
+    animation: none;
+    transform: none;
+  }
+  .mv__bg-dots {
+    animation: none;
+  }
+}
+
+.section-heading__ja {
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.4;
+  color: var(--color-pink);
+}
+
+.section-heading__ja--multi p {
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* ====================================================
+   Header
+   ==================================================== */
+.header {
+  background: var(--color-bg);
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Figma比率: ヘッダー高さ 34/390=8.7%、内側テキスト 14px */
+  container-type: inline-size;
+  container-name: header;
+}
+
+.header__inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  /* Figma SP390基準: 14/390 = 3.59% → PC500時 17.95px */
+  font-size: 3.59cqi;
+  font-weight: 700;
+  color: var(--color-text);
+  text-shadow:
+    1px 1px 0 var(--color-pink),
+    -1px -1px 0 rgba(50, 200, 255, 0.5);
+}
+
+.header__tagline,
+.header__brand {
+  white-space: nowrap;
+}
+
+/* ====================================================
+   Main Visual
+   Figma構造: 390x840
+   - 写真背景は MV全体に absolute で広がる
+   - タイトル(ロゴ) は写真上部 (paddingTop: 160px) に配置
+   - bandとDLは写真の下部に重ねる
+   ==================================================== */
+.mv {
+  position: relative;
+  background: var(--color-bg);
+  width: 100%;
+  aspect-ratio: 390 / 840;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 40%; /* ロゴをMV中央付近まで下げる */
+  overflow: hidden;
+  /* コンテナクエリで MV幅基準のサイズ単位 (cqw) を使えるように */
+  container-type: inline-size;
+  container-name: mv;
+}
+
+.mv__bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.mv__bg-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* ブラウン管走査線エフェクト (CSS-only)
+   - repeating-linear-gradient で 1px線 + 2px ギャップを生成
+   - background-position を縦スクロールで動かして CRT のスキャンライン感を再現
+   - mix-blend-mode: multiply で写真の暗部に黒線を乗算 → 明部だけ目立つ自然な見え方
+   調整パラメータ:
+   - 線の太さ/密度: gradient stop の 1px (線) / 3px (1周期)
+   - 線の濃さ: gradient の rgba alpha と全体 opacity
+   - 速度: animation duration (短いほどブルブル/長いほどゆっくり流れる) */
+.mv__bg-dots {
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.5) 0,
+    rgba(0, 0, 0, 0.5) 1px,
+    transparent 1px,
+    transparent 4px
+  );
+  background-size: 100% 4px;
+  mix-blend-mode: multiply;
+  opacity: 0.4;
+  animation: scanline-scroll 0.1s linear infinite;
+  pointer-events: none;
+  will-change: background-position;
+}
+
+@keyframes scanline-scroll {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 0 4px;
+  }
+}
+
+/* タイトル: 写真上1/4付近にロゴとタグライン
+   ページ表示時に cohamu.com 参考の wiggle グリッチを 1 回再生。
+   skewX(0) で終わるので終了後は通常表示に戻る。 */
+.mv__title {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  text-align: center;
+  padding: 0 20px;
+  opacity: 0;
+  animation: mv-title-wiggle 0.4s ease-out 0.5s 1 forwards;
+}
+
+/* cohamu の wiggle (skewX 10キー)、1s delay 後に再生 / opacity 0→1 で出現 */
+@keyframes mv-title-wiggle {
+  0%   { transform: skewX(24deg);  opacity: 1; }
+  10%  { transform: skewX(-8deg);  opacity: 1; }
+  20%  { transform: skewX(55deg);  opacity: 1; }
+  30%  { transform: skewX(-90deg); opacity: 1; }
+  40%  { transform: skewX(29deg);  opacity: 1; }
+  50%  { transform: skewX(-90deg); opacity: 1; }
+  60%  { transform: skewX(3deg);   opacity: 1; }
+  70%  { transform: skewX(-2deg);  opacity: 1; }
+  80%  { transform: skewX(1deg);   opacity: 1; }
+  90%  { transform: skewX(10deg);  opacity: 1; }
+  100% { transform: skewX(0deg);   opacity: 1; }
+}
+
+.mv__tagline {
+  /* Figma SP390基準: 20/390 = 5.128% → PC500時 25.6px */
+  font-size: 5.13cqi;
+  font-weight: 900;
+  color: var(--color-text);
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  opacity: 0;
+  /* wiggle 同期で text-shadow を大きくズラす。
+     forwards で終了後 opacity:1 維持、text-shadow は 100% 未指定で .neon-shadow に戻る。 */
+  animation: mv-tagline-glitch-shadow 0.4s ease-out 0.5s 1 forwards;
+}
+
+/* 0% 〜 90% を派手ズレで固定、100% は text-shadow 省略 → 終了時に .neon-shadow に戻る */
+@keyframes mv-tagline-glitch-shadow {
+  0%,
+  90% {
+    text-shadow:
+      30px 13px rgba(246, 0, 153, 0.8),
+      -38px -4px rgba(15, 210, 255, 0.8),
+      -2px -4px rgba(255, 210, 0, 1);
+    opacity: 1;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* CasLiveロゴ (cyan/pink/white 3層が1つのSVG内に統合済み)
+   Figma SP390基準: 300/390 = 76.9% → PC500時 384.6px
+   cqi で mv コンテナ幅基準にして padding の影響を受けないようにする */
+.mv__logo {
+  width: 76.9cqi;
+  height: auto;
+  display: block;
+  /* タイトル0.5s delay → wiggle 0.4s 終了直後にピクピクッグリッチが入るよう delay 1s。
+     初期は opacity:0、wiggle と同タイミングで logo-appear で出現。
+     MVロゴはCTA下部より大きい (76.9cqi vs 270px固定) ため、同じpx値だと色ズレ・揺れが
+     相対的に弱く見える。mv-logo-glitch で translate/drop-shadow を1.5倍に拡大。 */
+  opacity: 0;
+  animation:
+    mv-logo-appear 0.01s linear 0.5s 1 forwards,
+    mv-logo-glitch 2.5s infinite steps(1, end) 1s;
+}
+
+@keyframes mv-logo-appear {
+  to { opacity: 1; }
+}
+
+/* MV専用グリッチ: logo-glitch の translate/drop-shadow を 2px→3px / 1px→2px に拡大 */
+@keyframes mv-logo-glitch {
+  0%,
+  100% {
+    transform: translate(0, 0);
+    filter: none;
+  }
+  4% {
+    transform: translate(3px, 0);
+    filter: drop-shadow(3px 0 var(--color-pink)) drop-shadow(-3px 0 var(--color-cyan));
+  }
+  6% {
+    transform: translate(-3px, 0);
+    filter: drop-shadow(-3px 0 var(--color-pink)) drop-shadow(3px 0 var(--color-cyan));
+  }
+  8% {
+    transform: translate(0, 0);
+    filter: none;
+  }
+  64% {
+    transform: translate(2px, 0);
+    filter: drop-shadow(3px 0 var(--color-pink));
+  }
+  66% {
+    transform: translate(-2px, 0);
+    filter: drop-shadow(-3px 0 var(--color-cyan));
+  }
+  68% {
+    transform: translate(0, 0);
+    filter: none;
+  }
+}
+
+/* キャラ浮遊: intro-character / cta-character 共通 */
+@keyframes character-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+/* MV内のDLエリア (band + DLボタン) - 写真下部に重ねる */
+.mv__cta {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0;
+}
+
+/* ====================================================
+   ピンクの傾斜帯 + テキスト (band)
+   band__img = 斜めピンクリボンPNG (テキストなし)
+   band__text = HTMLテキスト、リボン上にオーバーレイ
+   ==================================================== */
+.band {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 390 / 179;
+}
+
+.band__img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  z-index: 0;
+}
+
+/* MV内 band-pink のみ：ロゴ wiggle 終了(0.9s)後、1s から 0.6s かけてふわっと表示 */
+.mv__cta .band__img {
+  opacity: 0;
+  animation: mv-band-fade-in 0.6s ease-out 1s 1 forwards;
+}
+
+@keyframes mv-band-fade-in {
+  to { opacity: 1; }
+}
+
+/* band-pink.png にテキストが baked in 済のため、HTMLのband__textは
+   スクリーンリーダー専用として視覚的に非表示にする */
+.band__text {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ====================================================
+   DLボタン (App Store / Google Play)
+   ==================================================== */
+.dl-row {
+  background: var(--color-bg);
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 30px 20px;
+  border-radius: 20px 20px 0 0;
+}
+
+.dl-row__btn {
+  display: inline-block;
+  transition: transform 0.2s ease;
+}
+
+.dl-row__btn:hover {
+  transform: translateY(-2px);
+}
+
+.dl-row__btn img {
+  height: 57px;
+  width: auto;
+  display: block;
+}
+
+.dl-row--small {
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
+  gap: 4px;
+}
+
+.dl-row--small .dl-row__btn img {
+  height: 50px;
+}
+
+/* ====================================================
+   Introduction
+   ==================================================== */
+.introduction {
+  background: var(--color-bg);
+}
+
+/* MVのDLボタン直下との余白を詰めるため、introduction のみ上 padding を縮める。
+   experience/cta は section-inner の標準 80px を維持。 */
+.introduction .section-inner {
+  padding-top: 40px;
+}
+
+.introduction__text {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 10px;
+  width: 100%;
+  max-width: var(--content-width);
+}
+
+.introduction__text p {
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 2;
+  color: var(--color-text);
+  text-align: justify;
+}
+
+.neon-card {
+  width: calc(100% - 2 * var(--sp-gutter));
+  max-width: 338px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+}
+
+.introduction__media {
+  /* neon-card 外縁 (max-width 338px) ぴったりまで拡張 = 物理最大値。
+     これ以上は枠から外にはみ出すため、要望次第で margin マイナス値を増やす。 */
+  width: calc(100% + 40px);
+  max-width: 338px;
+  margin-left: -20px;
+  margin-right: -20px;
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+  animation: character-float 4s ease-in-out infinite;
+  will-change: transform;
+}
+
+.introduction__media img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.introduction__caption {
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 2;
+  color: var(--color-text);
+  text-align: justify;
+  width: 100%;
+  max-width: 298px;
+}
+
+/* ====================================================
+   Experience
+   ==================================================== */
+.experience {
+  background:
+    linear-gradient(
+      179.99deg,
+      rgba(56, 20, 137, 0.5) 0%,
+      rgba(250, 71, 161, 0.5) 70%,
+      rgba(255, 209, 54, 0.5) 100%
+    ),
+    rgb(100, 107, 170);
+}
+
+.experience .section-heading__en,
+.experience .section-heading__ja {
+  color: var(--color-text);
+}
+
+.experience .section-heading__ja {
+  color: var(--color-pink);
+}
+
+/* exp-block (画像 + テキスト 1セット) */
+.exp-block {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  align-items: center;
+}
+
+.exp-block__image {
+  position: relative;
+  width: 100%;
+  max-width: 370px;
+  height: 208px;
+  overflow: hidden;
+}
+
+.exp-block__image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.exp-block__image--right {
+  border-radius: 20px 0 0 20px;
+  margin-right: 0;
+  margin-left: auto;
+}
+
+.exp-block__image--left {
+  border-radius: 0 20px 20px 0;
+  margin-left: 0;
+  margin-right: auto;
+}
+
+.exp-block__image--right img,
+.exp-block__image--left img {
+  border-radius: inherit;
+}
+
+.exp-block__dots {
+  position: absolute;
+  inset: 0;
+  background-image: url("assets/images/dot-pattern.png");
+  background-size: 3px 3px;
+  background-repeat: repeat;
+  opacity: 0.1;
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+.exp-block__text {
+  width: 100%;
+  max-width: var(--content-width);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.exp-block__text--right {
+  align-items: flex-end;
+  text-align: right;
+}
+
+.exp-block__heading {
+  font-size: 30px;
+  font-weight: 900;
+  line-height: 1.3;
+  color: var(--color-text);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.exp-block__body {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.exp-block__body p {
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 2;
+  color: var(--color-text);
+  text-align: justify;
+}
+
+/* CTAボタン (experience中) */
+.exp-cta {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+}
+
+.exp-cta__btn {
+  width: calc(100% - 2 * var(--sp-gutter));
+  max-width: 338px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.exp-cta__btn:hover {
+  transform: translateY(-2px);
+}
+
+.neon-card--button {
+  padding: 0;
+}
+
+.exp-cta__btn span {
+  font-size: 26px;
+  font-weight: 900;
+  color: var(--color-text);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  /* CSS-only グリッチ用: 疑似要素オーバーレイのため relative */
+  position: relative;
+  display: inline-block;
+  /* ベース文字も微振動で形ブレ */
+  animation: glitch-base 3s infinite steps(1, end);
+}
+
+/* exp-feature (カード型大コンテンツ)
+   Figma 原案にはネオン枠なしのため box-shadow を打ち消す。
+   neon-card 由来のテクスチャ背景・padding・flex layout は維持。 */
+.exp-feature {
+  padding: 40px 20px;
+  width: 100%;
+  max-width: 350px;
+  box-shadow: none;
+}
+
+.exp-feature__heading {
+  font-size: 30px;
+  font-weight: 900;
+  line-height: 1.35;
+  color: var(--color-text);
+  text-transform: uppercase;
+  width: 100%;
+}
+
+.exp-feature__image {
+  position: relative;
+  width: 100%;
+  max-width: 310px;
+  height: 197px;
+  overflow: hidden;
+  border-radius: 4px;
+}
+
+.exp-feature__image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.exp-feature__body {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+.exp-feature__body p {
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 2;
+  color: var(--color-text);
+  text-align: justify;
+}
+
+/* ====================================================
+   CTA セクション
+   ==================================================== */
+.cta {
+  background: var(--color-bg);
+  padding: 60px 0 80px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px;
+}
+
+.cta__band {
+  width: 100%;
+}
+
+.cta__character {
+  /* max-width 380px は SP frame (max 500px) - 余白の余裕分。
+     これ以上に拡大したい場合は width 余白を更に縮めるか max-width を上げる。 */
+  width: calc(100% - 32px);
+  max-width: 380px;
+  height: 540px;
+  overflow: hidden;
+  margin-left: auto;
+  margin-right: auto;
+  animation: character-float 4.5s ease-in-out infinite;
+  animation-delay: -2s;
+  will-change: transform;
+}
+
+.cta__character img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* CTA内DLエリア */
+.cta__dl {
+  padding: 40px 16px;
+}
+
+.cta__dl-title {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.cta__dl-tagline {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--color-text);
+  white-space: nowrap;
+}
+
+.cta__dl-logo {
+  width: 270px;
+  height: auto;
+  display: block;
+  /* CSS-only グリッチ: <img> なので疑似要素は使えないため
+     translate + drop-shadow(pink/cyan) を keyframes で時間変化させ
+     「時々ピクピクッと色ずれ」感を出す */
+  animation: logo-glitch 2.5s infinite steps(1, end);
+}
+
+/* シェイク区間 (4-12%, 64-72%) を半分の時間幅 (4-8%, 64-68%) に詰めて
+   ピクピクッ感を倍速化。発火タイミング (静止→シェイク) はそのまま。 */
+@keyframes logo-glitch {
+  0%,
+  100% {
+    transform: translate(0, 0);
+    filter: none;
+  }
+  4% {
+    transform: translate(2px, 0);
+    filter: drop-shadow(2px 0 var(--color-pink)) drop-shadow(-2px 0 var(--color-cyan));
+  }
+  6% {
+    transform: translate(-2px, 0);
+    filter: drop-shadow(-2px 0 var(--color-pink)) drop-shadow(2px 0 var(--color-cyan));
+  }
+  8% {
+    transform: translate(0, 0);
+    filter: none;
+  }
+  64% {
+    transform: translate(1px, 0);
+    filter: drop-shadow(2px 0 var(--color-pink));
+  }
+  66% {
+    transform: translate(-1px, 0);
+    filter: drop-shadow(-2px 0 var(--color-cyan));
+  }
+  68% {
+    transform: translate(0, 0);
+    filter: none;
+  }
+}
+
+/* ====================================================
+   Footer
+   ==================================================== */
+.footer {
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255, 209, 54, 0.5) 0%,
+      rgba(250, 71, 161, 0.5) 30%,
+      rgba(56, 20, 137, 0.5) 100%
+    ),
+    rgb(100, 107, 170);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.footer__nav {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.footer__link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 70px;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--color-text);
+  text-transform: uppercase;
+  border-bottom: 3px solid var(--color-bg);
+  transition: opacity 0.2s ease;
+}
+
+.footer__link:first-child {
+  border-top: 3px solid var(--color-bg);
+}
+
+.footer__link:hover {
+  opacity: 0.7;
+}
+
+.footer__copy {
+  width: 100%;
+  background: var(--color-bg);
+  color: var(--color-text);
+  text-align: center;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 10px 20px;
+}
+
+/* ====================================================
+   Scroll reveal (JS連動)
+   ==================================================== */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity 0.6s ease,
+    transform 0.6s ease;
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal,
+  .reveal.visible {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* ====================================================
+   レスポンシブ調整
+   ==================================================== */
+
+/* SP 360px 以下: 極小端末で見切れ防止 */
+@media (max-width: 359px) {
+  :root {
+    --sp-gutter: 16px;
+  }
+
+  .mv__tagline,
+  .header__inner {
+    font-size: 11px;
+  }
+
+  .section-heading__en {
+    font-size: 36px;
+  }
+
+  .exp-block__heading,
+  .exp-feature__heading {
+    font-size: 26px;
+  }
+}
+
+/* ====================================================
+   PC Showcase 装飾 (左ロゴ / 右QR)
+   - SP/タブレットでは非表示
+   - PC (1100px+) で main の左右に固定表示
+   ==================================================== */
+.pc-decor {
+  display: none;
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  pointer-events: none;
+}
+
+/* 左余白の中央に配置:
+   左余白 = 0 〜 SP左端(50vw - 250)、中央 = (50vw - 250) / 2 = 25vw - 125
+   装飾中央 = 25vw - 125
+   装飾左端 = 25vw - 125 - (width / 2) = 25vw - 125 - 204.5 = 25vw - 329.5 */
+.pc-decor--left {
+  left: max(20px, calc(25vw - 329.5px));
+  width: 409px;
+  /* display は @media (min-width: 1400px) 内で指定。
+     ここに display: flex を書くと .pc-decor の display: none を後勝ちで打ち消し、
+     SP/タブレットでも装飾が表示されてしまう。 */
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+/* 右余白の中央に配置:
+   右余白 = SP右端(50vw + 250) 〜 100vw、中央 = (50vw + 250 + 100vw) / 2 = 75vw + 125
+   装飾中央 = 75vw + 125
+   装飾右端 (viewport右端から) = 100vw - (75vw + 125 + width/2) = 25vw - 125 - 150 = 25vw - 275 */
+.pc-decor--right {
+  right: max(20px, calc(25vw - 275px));
+  width: 300px;
+}
+
+/* MV と同じ構成: 親 flex column align-items center で
+   tagline は自然な文字幅、ロゴは width:100% → 両方とも中央軸に揃う。
+   font-size 28px は 14文字 + letter-spacing 0.02em で aside 409px に収まる上限値。 */
+.pc-decor__tagline {
+  font-size: 28px;
+  font-weight: 900;
+  color: var(--color-text);
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  margin-bottom: 12px;
+}
+
+.pc-decor__logo {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* SVG内の rx=20 (220 viewBox基準) を 300px 表示に換算 → 27px が等価
+   neon-card と同じ box-shadow オフセット手法でシアン左上・ピンク右下を演出 */
+.pc-decor__qr {
+  width: 300px;
+  height: 300px;
+  display: block;
+  border-radius: 27px;
+  box-shadow:
+    -6px -6px 0 0 var(--color-cyan),
+    6px 6px 0 0 var(--color-pink);
+}
+
+/* PC: SPフレームを中央配置し、両脇はグラデ背景 */
+@media (min-width: 768px) {
+  /* PCでは本文系コンテンツ幅を 350→420 に拡大 (Figma整合)。
+     section-heading / introduction__text / exp-block__text 全てに反映。
+     main max 500px、左右 sp-gutter 20px → 内側 460px、420px は内側に余裕で収まる。 */
+  :root {
+    --content-width: 420px;
+  }
+
+  main {
+    box-shadow: 0 0 80px rgba(50, 200, 255, 0.12);
+  }
+
+  /* PCではライブコマース/ライブ配信の画像を大きく見せる (Figma整合)。
+     aspect 370:208 を維持しつつ max-width 370→440、height 208→247。 */
+  .exp-block__image {
+    max-width: 440px;
+    height: 247px;
+  }
+
+  /* neon-card 系の枠サイズも PC で 420px に拡大 (Figma整合)。
+     introduction / exp-cta__btn / exp-feature / cta__dl などすべての枠が連動。
+     exp-cta__btn と exp-feature は独自 max-width が定義されているため明示上書き必須。 */
+  .neon-card,
+  .exp-cta__btn,
+  .exp-feature {
+    max-width: 420px;
+  }
+}
+
+/* PC 1400px 以上: showcase装飾を表示
+   理由: 左右余白中央配置の calc が SP枠に被らなくなる条件:
+   - 左 (width=409): 装飾右端 < SP左端 → 25vw + 79.5 < 50vw - 250 → vw > 1318
+   - 右 (width=300): 装飾左端 > SP右端 → 75vw - 25 > 50vw + 250 → vw > 1100
+   どちらも安全圏に入る 1400px を採用 */
+@media (min-width: 1400px) {
+  .pc-decor--left {
+    display: flex;
+  }
+  .pc-decor--right {
+    display: block;
+  }
+}
